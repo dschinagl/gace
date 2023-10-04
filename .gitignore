@@ -1,0 +1,13 @@
+**build**
+**__pycache__**
+**egg-info**
+*.DS_Store
+
+*.pth
+*.pkl
+*.bin
+*.so
+*.egg
+
+data_gace/
+
