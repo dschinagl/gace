@@ -4,7 +4,7 @@ This is the demo code for the paper:
 
 **GACE: Geometry Aware Confidence Enhancement for Black-box 3D Object Detectors on LiDAR-Data**
 <br>
-[David Schinagl](https://dschinagl.github.io), [Georg Krispel](https://scholar.google.at/citations?user=Vt2vlgIAAAAJ&hl=de), [Christian Fruhwirth-Reisinger](https://scholar.google.com/citations?user%253DMg5Vlp8AAAAJ%2526hl%253Dde)
+[David Schinagl](https://dschinagl.github.io), [Georg Krispel](https://scholar.google.at/citations?user=Vt2vlgIAAAAJ&hl=de), [Christian Fruhwirth-Reisinger](https://scholar.google.com/citations?user=Mg5Vlp8AAAAJ&hl=de&oi=ao)
 [Horst Possegger](https://snototter.github.io/research/) 
 and [Horst Bischof](https://scholar.google.com/citations?user=_pq05Q4AAAAJ&hl=de)
 <br>
