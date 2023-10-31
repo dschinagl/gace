@@ -38,9 +38,6 @@ IEEE/CVF International Conference on Computer Vision (ICCV), 2023
 #### 3) SECOND Model Pre-Training
 [https://github.com/open-mmlab/OpenPCDet/blob/master/docs/GETTING_STARTED.md#train-a-model](https://github.com/open-mmlab/OpenPCDet/blob/master/docs/GETTING_STARTED.md#train-a-model)
 
-## Acknowledgement
-We thank the authors of [`OpenPCDet`](https://github.com/open-mmlab/OpenPCDet) for their open source release of their codebase.
-
 ## GACE Demo
 
 We provide a demo code showing the data extraction and training of a GACE model using a SECOND model as the base detector.
@@ -51,6 +48,8 @@ python gace-demo.py --ckpt ${PRETRAINED_SECOND_MODEL}
 ```
 where `${PRETRAINED_SECOND_MODEL}` is the path to the pretrained model weights.
 
+## Acknowledgement
+We thank the authors of [`OpenPCDet`](https://github.com/open-mmlab/OpenPCDet) for their open source release of their codebase.
 
 ## Citation
 

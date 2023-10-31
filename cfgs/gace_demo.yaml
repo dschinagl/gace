@@ -1,0 +1,42 @@
+CLASS_NAMES: ['Vehicle', 'Pedestrian', 'Cyclist']
+
+DATA_CONFIG:
+    _BASE_CONFIG_: cfgs/waymo_dataset.yaml
+
+MODEL:
+    _BASE_CONFIG_: cfgs/second_model.yaml
+
+GACE:
+    NR_MAX_DET_PER_SAMPLE: 500
+    
+    NORM_FACTORS: {
+        'cx': 80.0,
+        'cy': 80.0,
+        'cz': 5.0,
+        'dx': [21.0, 2.0, 4.0],
+        'dy': [4.0, 2.0, 1.5], 
+        'dz': [5.5, 2.5, 2.5],
+        'dist': 85.0,
+        'nr_pts': [70000.0, 6000.0, 6000.0],
+    }
+
+    NORM_FACTORS_CP: {
+        'dist': 170.0,
+    }
+    
+    CONTEXT_RADIUS: 20
+    MAX_NR_NEIGHBORS: 30
+    
+    MODEL:
+        H_I_HIDDEN_DIM: 256
+        H_I_OUTPUT_DIM: 128
+        H_C_HIDDEN_DIM: 256
+        H_C_OUTPUT_DIM: 64
+        H_F_HIDDEN_DIM: 256
+    
+    TRAIN:
+        NUM_EPOCHS: 3 
+        LR: 0.002
+        IOU_LOSS_W: 0.5
+        SFL_ALPHA: 0.5
+        SFL_GAMMA: 1

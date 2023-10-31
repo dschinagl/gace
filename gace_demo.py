@@ -1,14 +1,13 @@
 import argparse
-import glob
-import random
-import numpy as np
 import torch
-import datetime
-import pickle
+from datetime import datetime
+from pathlib import Path
 
 from pcdet.config import cfg, cfg_from_yaml_file
 
-from gace_utils.gace import GACE
+from gace_utils.gace_data import GACEDataset
+from gace_utils.gace_utils import GACELogger, train_gace_model, evaluate_gace_model
+
 
 def parse_config():
     parser = argparse.ArgumentParser(description='arg parser')
@@ -22,8 +21,10 @@ def parse_config():
                         help='batch size for GACE training')
     parser.add_argument('--workers', type=int, default=4, 
                         help='number of workers for dataloader')
-    parser.add_argument('--gace_data_folder', type=str, default='data_gace/', 
+    parser.add_argument('--gace_data_folder', type=str, default='gace_data/', 
                         help='folder for generated train/val data and model')
+    parser.add_argument('--gace_output_folder', type=str, default='gace_output/',
+                        help='folder for gace output')
 
     args = parser.parse_args()
 
@@ -36,29 +37,32 @@ def main():
     
     args, cfg = parse_config()
     
-    gace = GACE(args, cfg)
+    args.gace_output_folder = Path(args.gace_output_folder) / datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    args.gace_output_folder.mkdir(parents=True, exist_ok=True)
 
-    # create or load gace training/validation data
-    train_data_f, val_data_f, val_det_annos_f = gace.init_gace_data()
+    logger = GACELogger(args.gace_output_folder)
+    logger.gace_info('Demo for Geometry Aware Confidence Enhancement (GACE)')
+    logger.gace_info(f'Dataset:\t {cfg.DATA_CONFIG.DATASET}')
+    logger.gace_info(f'Base-Detector:\t {cfg.MODEL.NAME}')
+    logger.gace_info(f'Data Folder:\t {args.gace_data_folder}')
+    logger.gace_info(f'Output Folder:\t {args.gace_output_folder}')
 
-    # train gace model
-    gace_model = gace.train_model(train_data_f)
+    gace_dataset_train = GACEDataset(args, cfg, logger, train=True)
+    gace_dataset_val = GACEDataset(args, cfg, logger, train=False)
+    
+    logger.gace_info('Start training confidence enhancement model')
+    gace_model = train_gace_model(gace_dataset_train, args, cfg, logger)
+    
+    logger.gace_info('Start evaluation with new confidence scores')
+    result_str = evaluate_gace_model(gace_model, gace_dataset_val, args, cfg, logger)
+    logger.gace_info('Evaluation Results including GACE:')
+    logger.gace_info(result_str)
 
-    # evaluate model
-    results_dict = gace.eval_model(gace_model, val_data_f, val_det_annos_f)
-
-    output_folder = args.gace_data_folder
-    now = datetime.datetime.now()
-    output_model_file = output_folder + 'gace_model_' + now.strftime("%Y-%m-%d_%H-%M-%S") + '.pth'
-    output_result_file = output_folder + 'gace_result_' + now.strftime("%Y-%m-%d_%H-%M-%S") + '.pkl'
-
-    torch.save(gace_model, output_model_file)
-
-    with open(output_result_file, 'wb') as f:
-        pickle.dump(results_dict, f)
+    gace_model_path = args.gace_output_folder / 'gace_model.pth'
+    torch.save(gace_model, gace_model_path)
+    logger.gace_info(f'GACE model saved to {gace_model_path}')
 
     return
-
 
 
 if __name__ == '__main__':
